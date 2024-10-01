@@ -25,16 +25,14 @@ class UserRequest extends FormRequest
         $rules = [
             'nom' => 'required|string|max:255',
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($this->user)],
-            'type' => ['required', Rule::in(['admin', 'restoAdmin', 'manager', 'cuisinier'])],
+            'password' => 'required|string|min:8|confirmed',
         ];
 
-        if ($this->isMethod('post')) {
-            $rules['password'] = 'required|string|min:8|confirmed';
-        }
-
-        if (auth()->user()->type === 'admin') {
+        if (auth()->user()->type === 'admin' || auth()->user()->type === 0) {
+            $rules['type'] = ['required', Rule::in(['restoAdmin'])];
             $rules['restaurant_id'] = 'required|exists:restaurants,id';
-        } elseif (auth()->user()->type === 'restoAdmin') {
+        } elseif (auth()->user()->type === 'restoAdmin' || auth()->user()->type === 1) {
+            $rules['type'] = ['required', Rule::in(['manager', 'cuisinier'])];
             $rules['pointdevente_id'] = 'required|exists:pointde_ventes,id';
         }
 
@@ -59,5 +57,25 @@ class UserRequest extends FormRequest
             'pointdevente_id.required' => 'Veuillez sélectionner un point de vente.',
             'pointdevente_id.exists' => 'Le point de vente sélectionné n\'existe pas.',
         ];
+    }
+    public function validateResolved()
+    {
+        parent::validateResolved();
+        
+        $this->merge([
+            'type' => $this->convertTypeToNumeric($this->type),
+        ]);
+    }
+
+    protected function convertTypeToNumeric($type)
+    {
+        $typeMapping = [
+            'admin' => 0,
+            'restoAdmin' => 1,
+            'manager' => 2,
+            'cuisinier' => 3
+        ];
+
+        return $typeMapping[$type] ?? $type;
     }
 }

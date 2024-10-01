@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RestaurantController;
+use App\Http\Controllers\PointdeVenteController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,6 +36,14 @@ Route::middleware(['auth', 'user-access:admin'])->group(function (){
 });
 Route::middleware(['auth', 'user-access:restoAdmin'])->group(function (){
     Route::get('/restoAdmin', [HomeController::class, 'restoAdmin'])->name('restoAdmin');
+    Route::prefix('pointdevente')->controller(PointdeVenteController::class)->group(function(){
+        Route::get('/index','index')->name('ptvente.index');
+        Route::get('/create','create')->name('ptvente.create');
+        Route::post('/create','store')->name('ptvente.store');
+        Route::get('/show/{id}','show')->name('ptvente.show');
+        Route::put('/update/{id}','update')->name('ptvente.update');
+        Route::delete('/delete/{id}','destroy')->name('ptvente.delete');
+    });
 });
 Route::middleware(['auth', 'user-access:manager'])->group(function (){
     Route::get('/manager', [HomeController::class, 'manager'])->name('manager');

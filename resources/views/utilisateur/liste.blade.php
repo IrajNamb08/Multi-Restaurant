@@ -55,10 +55,11 @@
                                     <a href="{{route('users.show',$user->id)}}" data-toggle="tooltip" data-placement="top" title="Modifier">
                                         <i class="fas fa-pencil-alt"></i>
                                     </a>
-                                    <form action="" method="POST">
+                                    <form action="{{route('users.destroy',$user->id)}}" method="POST">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-link p-0 m-0" data-toggle="tooltip" data-placement="top" title="Supprimer">
+                                        <button type="submit" class="btn btn-link p-0 m-0" data-toggle="tooltip" data-placement="top" title="Supprimer"
+                                            onclick="return confirm('Voulez-vous continuer la suppression ?');">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </form>

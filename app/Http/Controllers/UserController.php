@@ -77,10 +77,12 @@ class UserController extends Controller
     public function store(UserRequest $request)
     {
         $userData = $request->validated();
+        $currentUser = auth()->user();
+
         $userData['password'] = Hash::make($userData['password']);
         
-        if (auth()->user()->type === 'restoAdmin') {
-            $userData['restaurant_id'] = auth()->user()->restaurant_id;
+        if ($currentUser->type === 'restoAdmin' || $currentUser->type === 1) {
+            $userData['restaurant_id'] = $currentUser->restaurant_id;
         }
 
         User::create($userData);

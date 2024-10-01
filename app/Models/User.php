@@ -25,6 +25,7 @@ class User extends Authenticatable
         'nom',
         'restaurant_id',
         'pointdevente_id',
+        'type',
         'email',
         'password',
     ];

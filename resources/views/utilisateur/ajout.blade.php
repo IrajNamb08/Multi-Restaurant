@@ -33,7 +33,7 @@
                 </div>
                 <div class="form-group col-md-6">
                     <label for="password_confirmation">Confirmer le Mot de passe</label>
-                    <input type="password_confirmation" class="form-control" name="password_confirmation" id="password_confirmation" required>
+                    <input type="password" class="form-control" name="password_confirmation" id="password_confirmation" required>
                 </div>
             </div>
             <div class="form-row">
