@@ -48,11 +48,16 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
     protected function type(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => ["admin", "restoAdmin", "manager", "cuisinier"][$value],
-            set: fn ($value) => array_search($value, ["admin", "restoAdmin", "manager", "cuisinier"]),
+            get: function ($value) {
+                return ["admin", "restoAdmin", "manager", "cuisinier"][$value];
+            },
+            set: function ($value) {
+                return array_search($value, ["admin", "restoAdmin", "manager", "cuisinier"]);
+            }
         );
     }
 

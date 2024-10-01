@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UserRequest extends FormRequest
@@ -24,7 +25,7 @@ class UserRequest extends FormRequest
         $rules = [
             'nom' => 'required|string|max:255',
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($this->user)],
-            'type' => ['required', 'string', Rule::in(['restoAdmin', 'manager', 'cuisinier'])],
+            'type' => ['required', Rule::in(['admin', 'restoAdmin', 'manager', 'cuisinier'])],
         ];
 
         if ($this->isMethod('post')) {

@@ -28,9 +28,9 @@
                             <th scope="col">Nom</th>
                             <th scope="col">Email</th>
                             <th>Type</th>
-                            @if(auth()->user()->type === 'admin')
+                            @if($currentUser->type === 'admin' || $currentUser->type === 0)
                                 <th>Restaurant</th>
-                            @elseif(auth()->user()->type === 'restoAdmin')
+                            @elseif($currentUser->type === 'restoAdmin' || $currentUser->type === 1)
                                 <th>Point de vente</th>
                             @endif
                             <th scope="col" class="text-right">Actions</th>
@@ -45,14 +45,14 @@
                                 <td>
                                     <span class="block-email">{{$user->email}}</span>
                                 </td>
-                                <td>{{ $user->type }}</td>
-                                @if(auth()->user()->type === 'admin')
-                                    <td>{{ $user->restaurant->nom ?? 'N/A' }}</td>
-                                @elseif(auth()->user()->type === 'restoAdmin')
+                                <td>{{ is_numeric($user->type) ? ['admin', 'restoAdmin', 'manager', 'cuisinier'][$user->type] : $user->type }}</td>
+                                @if($currentUser->type === 'admin' || $currentUser->type === 0)
+                                    <td>{{ $user->restaurant->nom_resto ?? 'N/A' }}</td>
+                                @elseif($currentUser->type === 'restoAdmin' || $currentUser->type === 1)
                                     <td>{{ $user->pointdevente->adresse ?? 'N/A' }}</td>
                                 @endif
                                 <td class="actions d-flex justify-content-end">
-                                    <a href="" data-toggle="tooltip" data-placement="top" title="Modifier">
+                                    <a href="{{route('users.show',$user->id)}}" data-toggle="tooltip" data-placement="top" title="Modifier">
                                         <i class="fas fa-pencil-alt"></i>
                                     </a>
                                     <form action="" method="POST">

@@ -1,73 +1,76 @@
 @extends('layouts.admin')
-
 @section('content')
-    <div class="container">
-        <div class="table-container">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h3>Liste des utilisateurs</h3>
-                @if (session('success'))
-                    <div class="alert alert-success">
-                        {{ session('success') }}
-                    </div>
-                @endif
-                @if (session('delete'))
-                    <div class="alert alert-danger">
-                        {{ session('delete') }}
-                    </div>
-                @endif
-                <a href="{{route('users.create')}}">
-                    <button class="au-btn au-btn-icon au-btn--green au-btn--small">
-                        <i class="fas fa-sign-in-alt"></i>Nouveau Accès
-                    </button>
-                </a>
-            </div>
-            <div class="table-responsive">
-                <table class="table table-borderless">
-                    <thead>
-                        <tr>
-                            <th scope="col">Nom</th>
-                            <th scope="col">Email</th>
-                            <th>Type</th>
-                            @if(auth()->user()->type === 'admin')
-                                <th>Restaurant</th>
-                            @elseif(auth()->user()->type === 'restoAdmin')
-                                <th>Point de vente</th>
-                            @endif
-                            <th scope="col" class="text-right">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($users as $user)   
-                            <tr>
-                                <td>
-                                    {{$user->nom}}
-                                </td>
-                                <td>
-                                    <span class="block-email">{{$user->email}}</span>
-                                </td>
-                                <td>{{ $user->type }}</td>
-                                @if(auth()->user()->type === 'admin')
-                                    <td>{{ $user->restaurant->nom ?? 'N/A' }}</td>
-                                @elseif(auth()->user()->type === 'restoAdmin')
-                                    <td>{{ $user->pointdevente->adresse ?? 'N/A' }}</td>
-                                @endif
-                                <td class="actions d-flex justify-content-end">
-                                    <a href="" data-toggle="tooltip" data-placement="top" title="Modifier">
-                                        <i class="fas fa-pencil-alt"></i>
-                                    </a>
-                                    <form action="" method="POST">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-link p-0 m-0" data-toggle="tooltip" data-placement="top" title="Supprimer">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </form>
-                                </td>
-                            </tr>
+    <div class="form-container">
+        <p><i class="fas fa-sign-in-alt"></i></p>
+        <h3 class="py-1">Nouveau Utilisateur</h3>
+        @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
                         @endforeach
-                    </tbody>
-                </table>
+                    </ul>
+                </div>
+            @endif
+        <hr>
+        <form action="{{route('users.store')}}" method="POST" enctype="multipart/form-data">
+            @csrf
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="nom">Nom d'utilisateur</label>
+                    <input type="text" class="form-control" name="nom" id="nom" required>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="email">Email</label>
+                    <input type="email" class="form-control" name="email" id="email" required>
+                </div>
+                
             </div>
-        </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="password">Mot de passe</label>
+                    <input type="password" class="form-control" name="password" id="password" required>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="password_confirmation">Confirmer le Mot de passe</label>
+                    <input type="password_confirmation" class="form-control" name="password_confirmation" id="password_confirmation" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label for="type" class=" form-control-label">Type d'utilisateur</label>
+                    <select name="type" id="type" class="form-control">
+                        <option></option>
+                        @foreach ($allowedTypes as $type)
+                            <option value="{{ $type }}">{{ ucfirst($type) }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                @if(auth()->user()->type === 'admin')
+                    <div class="form-group col-md-4">
+                        <label for="restaurant_id" class=" form-control-label">Restaurant</label>
+                        <select name="restaurant_id" id="restaurant_id" class="form-control">
+                            <option></option>
+                            @foreach ($restaurants as $restaurant)
+                                <option value="{{ $restaurant->id }}">{{ $restaurant->nom_resto }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                @elseif(auth()->user()->type === 'restoAdmin')
+                    <div class="form-group col-md-4">
+                        <label for="pointdevente_id" class=" form-control-label">Point de vente</label>
+                        <select name="pointdevente_id" id="pointdevente_id" class="form-control">
+                            <option></option>
+                            @foreach ($pointsDeVente as $pointDeVente)
+                                <option value="{{ $pointDeVente->id }}">{{ $pointDeVente->adresse }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                @endif
+            </div>
+            <div class="form-group text-right">
+                <button type="submit" class="btn-submit">Enregistrer <i class="far fa-plus-square"></i></button>
+            </div>
+        </form>
     </div>
 @endsection

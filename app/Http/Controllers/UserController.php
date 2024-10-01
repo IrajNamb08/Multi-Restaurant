@@ -3,8 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Restaurant;
+use App\Models\PointdeVente;
 use Illuminate\Http\Request;
 use App\Http\Requests\UserRequest;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -14,19 +18,34 @@ class UserController extends Controller
     public function index()
     {
         $currentUser = auth()->user();
-    
-        if ($currentUser->type === 'admin') {
-            $users = User::where('type', 'restoAdmin')->with('restaurant')->get();
-        } elseif ($currentUser->type === 'restoAdmin') {
+        Log::info('Current user type:', ['type' => $currentUser->type]);
+
+        if ($currentUser->type === 'admin' || $currentUser->type === 0) {
+            Log::info('Fetching restoAdmin users');
+            $users = User::where(function($query) {
+                $query->where('type', 'restoAdmin')
+                    ->orWhere('type', 1);
+            })->where(function($query) {
+                $query->where('type', '!=', 'admin')
+                    ->where('type', '!=', 0);
+            })->with('restaurant')->get();
+        } elseif ($currentUser->type === 'restoAdmin' || $currentUser->type === 1) {
+            Log::info('Fetching manager and cuisinier users for restaurant', ['restaurant_id' => $currentUser->restaurant_id]);
             $users = User::where('restaurant_id', $currentUser->restaurant_id)
-                        ->whereIn('type', ['manager', 'cuisinier'])
+                        ->where(function($query) {
+                            $query->whereIn('type', ['manager', 'cuisinier'])
+                                ->orWhereIn('type', [2, 3]);
+                        })
                         ->with('pointdevente')
                         ->get();
         } else {
+            Log::warning('Unauthorized access attempt', ['user_type' => $currentUser->type]);
             return redirect()->back()->with('error', 'Vous n\'avez pas les permissions nécessaires.');
         }
 
-        return view('utilisateur.liste', compact('users'));
+        Log::info('Fetched users count:', ['count' => $users->count()]);
+        
+        return view('utilisateur.liste', compact('users', 'currentUser'));
     }
 
     /**
