@@ -2,11 +2,13 @@
 
   
 namespace App\Http\Controllers\Auth;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\RedirectResponse;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
-use Illuminate\Http\Request;
-use Illuminate\Http\RedirectResponse;
+
 class LoginController extends Controller
 {
     
@@ -29,16 +31,9 @@ class LoginController extends Controller
         ]);
         if(auth()->attempt(array('email' => $input['email'], 'password' => $input['password'])))
         {
-            if (auth()->user()->type == 'restoAdmin') {
-                return redirect()->route('restoAdmin');
-            }else if (auth()->user()->type == 'manager') {
-                return redirect()->route('manager');
-            }else if(auth()->user()->type == 'cuisinier'){
-                return redirect()->route('cuisinier');
-            }
-            else{
-                return redirect()->route('admin');
-            }
+            $user = auth()->user();
+            Log::info('User logged in', ['id' => $user->id, 'type' => $user->type]);
+            return redirect($user->getHomeRoute());
         }else{
             return redirect()->route('login')
                 ->with('error','Email-Address And Password Are Wrong.');

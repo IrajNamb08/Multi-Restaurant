@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 
 class UserAccess
@@ -15,20 +16,14 @@ class UserAccess
      */
     public function handle(Request $request, Closure $next, $userType): Response
     {
-        // Conversion du type utilisateur en nombre entier pour correspondre avec la base de données
-        $userTypeMapping = [
-            'admin' => 0,
-            'restoAdmin' => 1,
-            'manager' => 2,
-            'cuisinier' => 3,
-        ];
+        $user = auth()->user();
+        Log::info('UserAccess middleware', ['user_id' => $user->id, 'user_type' => $user->type, 'required_type' => $userType]);
 
-        if (isset($userTypeMapping[$userType]) && auth()->user()->type == $userTypeMapping[$userType]) {
+        if ($user->type === $userType) {
             return $next($request);
         }
 
+        Log::warning('Access denied', ['user_id' => $user->id, 'user_type' => $user->type, 'required_type' => $userType]);
         return response()->json(['You do not have permission to access for this page.']);
-        // ou si tu veux une page d'erreur personnalisée
-        // return response()->view('errors.check-permission');
     }
 }

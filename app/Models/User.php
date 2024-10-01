@@ -3,10 +3,14 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\Restaurant;
+use App\Models\PointdeVente;
+use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
@@ -46,8 +50,38 @@ class User extends Authenticatable
     ];
     protected function type(): Attribute
     {
-        return new Attribute(
-            get: fn ($value) =>  ["admin", "restoAdmin", "manager","cuisinier"][$value],
+        return Attribute::make(
+            get: fn ($value) => ["admin", "restoAdmin", "manager", "cuisinier"][$value],
+            set: fn ($value) => array_search($value, ["admin", "restoAdmin", "manager", "cuisinier"]),
         );
+    }
+
+    public function getHomeRoute()
+    {
+        Log::info('User type: ' . $this->type);
+       
+        switch($this->type) {
+            case 'admin':
+                return route('admin');
+            case 'restoAdmin':
+                return route('restoAdmin');
+            case 'manager':
+                return route('manager');
+            case 'cuisinier':
+                return route('cuisinier');
+            default:
+                Log::warning('Unknown user type: ' . $this->type);
+                return '/';
+        }
+    }
+
+    public function restaurant()
+    {
+        return $this->belongsTo(Restaurant::class);
+    }
+
+    public function pointdevente()
+    {
+        return $this->belongsTo(PointdeVente::class);
     }
 }
