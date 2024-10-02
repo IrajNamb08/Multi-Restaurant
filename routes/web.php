@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\MenuController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RestaurantController;
 use App\Http\Controllers\PointdeVenteController;
@@ -43,6 +44,14 @@ Route::middleware(['auth', 'user-access:restoAdmin'])->group(function (){
         Route::get('/show/{id}','show')->name('ptvente.show');
         Route::put('/update/{id}','update')->name('ptvente.update');
         Route::delete('/delete/{id}','destroy')->name('ptvente.delete');
+    });
+    Route::prefix('menu')->controller(MenuController::class)->group(function(){
+        Route::get('/index','index')->name('menu.index');
+        Route::get('/create','create')->name('menu.create');
+        Route::post('/create','store')->name('menu.store');
+        Route::get('/show/{id}','show')->name('menu.show');
+        Route::put('/update/{id}','update')->name('menu.update');
+        Route::delete('/delete/{id}','destroy')->name('menu.delete');
     });
 });
 Route::middleware(['auth', 'user-access:manager'])->group(function (){

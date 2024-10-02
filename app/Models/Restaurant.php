@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Menu;
 use App\Models\User;
 use App\Models\PointdeVente;
 use Illuminate\Database\Eloquent\Model;
@@ -19,5 +20,10 @@ class Restaurant extends Model
     public function pointdeventes()
     {
         return $this->hasMany(PointdeVente::class);
+    }
+
+    public function menus()
+    {
+        return $this->hasMany(Menu::class);
     }
 }

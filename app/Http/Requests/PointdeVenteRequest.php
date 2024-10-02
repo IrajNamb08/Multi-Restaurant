@@ -11,7 +11,7 @@ class PointdeVenteRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,14 @@ class PointdeVenteRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'adresse' => 'required|string|max:255',
+        ];
+    }
+
+    public function messages()
+    {
+        return[
+            'adresse' => "Adresse à fournir obligatoirement",
         ];
     }
 }

@@ -22,13 +22,13 @@
                     @endif
 
                     @if(auth()->user()->type === 'restoAdmin')
-                        <li class="">
+                        <li class="{{request()->routeIs('ptvente.index') || request()->routeIs('ptvente.create') || request()->routeIs('ptvente.show') ? 'active' : ''}}">
                             <a href="{{route('ptvente.index')}}">
                                 <i class="fas fa-shopping-basket"></i> Point de vente
                             </a>
                         </li>
                         <li class="">
-                            <a href="">
+                            <a href="{{route('menu.index')}}">
                                 <i class="fas fa-book"></i> Menus
                             </a>
                         </li>
