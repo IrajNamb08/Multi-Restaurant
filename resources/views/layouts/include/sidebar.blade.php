@@ -11,7 +11,7 @@
                     <li class="{{request()->is('admin*') || request()->is('restoAdmin*') || request()->is('manager*') || request()->is('cuisinier*') ? 'active' : ''}}">
                         <a href="{{ auth()->user()->getHomeRoute() }}">
                             <i class="fas fa-home"></i> Accueil
-                        </a>
+                        </a>                                               
                     </li>
                     @if(auth()->user()->type === 'admin')
                         <li class="{{request()->routeIs('resto.index') || request()->routeIs('resto.create') || request()->routeIs('resto.show') ? 'active' : ''}}">
@@ -27,7 +27,7 @@
                                 <i class="fas fa-shopping-basket"></i> Point de vente
                             </a>
                         </li>
-                        <li class="">
+                        <li class="{{request()->routeIs('menu.index') || request()->routeIs('menu.create') || request()->routeIs('menu.show') ? 'active' : ''}}">
                             <a href="{{route('menu.index')}}">
                                 <i class="fas fa-book"></i> Menus
                             </a>
@@ -38,12 +38,21 @@
                             </a>
                         </li>
                     @endif
+                    @if (auth()->user()->type === 'manager')
+                        <li class="{{request()->routeIs('table.index') || request()->routeIs('table.create') || request()->routeIs('table.show') ? 'active' : ''}}">
+                            <a href="{{route('table.index')}}">
+                                <i class="fas fa-chair"></i> Tables
+                            </a>
+                        </li>
+                    @endif
+                    @if (auth()->user()->type === 'restoAdmin' || auth()->user()->type === 'admin')
+                        <li class="{{request()->routeIs('users.index') || request()->routeIs('users.create') || request()->routeIs('users.show') ? 'active' : ''}}">
+                            <a href="{{route('users.index')}}">
+                                <i class="fas fa-user"></i>Utilisateur
+                            </a>
+                        </li>
+                    @endif
                  @endauth
-                <li class="{{request()->routeIs('users.index') || request()->routeIs('users.create') || request()->routeIs('users.show') ? 'active' : ''}}">
-                    <a href="{{route('users.index')}}">
-                        <i class="fas fa-user"></i>Utilisateur
-                    </a>
-                </li>
             </ul>
         </nav>
     </div>

@@ -6,6 +6,7 @@ use App\Http\Controllers\MenuController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RestaurantController;
 use App\Http\Controllers\PointdeVenteController;
+use App\Http\Controllers\TableRestaurantController;
 
 /*
 |--------------------------------------------------------------------------
@@ -56,6 +57,14 @@ Route::middleware(['auth', 'user-access:restoAdmin'])->group(function (){
 });
 Route::middleware(['auth', 'user-access:manager'])->group(function (){
     Route::get('/manager', [HomeController::class, 'manager'])->name('manager');
+    Route::prefix('table')->controller(TableRestaurantController::class)->group(function(){
+        Route::get('/index','index')->name('table.index');
+        Route::get('/create','create')->name('table.create');
+        Route::post('/create','store')->name('table.store');
+        Route::get('/show/{id}','show')->name('table.show');
+        Route::put('/update/{id}','update')->name('table.update');
+        Route::delete('/delete/{id}','destroy')->name('table.delete');
+    });
 });
 Route::middleware(['auth', 'user-access:cuisinier'])->group(function (){
     Route::get('/cuisinier', [HomeController::class, 'cuisinier'])->name('cuisinier');
@@ -69,5 +78,5 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update');
     Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
 });
-
+Route::get('/scan/{restaurant}/{pointdevente}/{table}', [ScanController::class, 'scanTable'])->name('scan.table');
 
