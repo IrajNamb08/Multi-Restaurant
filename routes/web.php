@@ -61,9 +61,8 @@ Route::middleware(['auth', 'user-access:manager'])->group(function (){
         Route::get('/index','index')->name('table.index');
         Route::get('/create','create')->name('table.create');
         Route::post('/create','store')->name('table.store');
-        Route::get('/show/{id}','show')->name('table.show');
-        Route::put('/update/{id}','update')->name('table.update');
         Route::delete('/delete/{id}','destroy')->name('table.delete');
+        Route::get('/print','printQrCodes')->name('table.print');
     });
 });
 Route::middleware(['auth', 'user-access:cuisinier'])->group(function (){

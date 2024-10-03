@@ -4,23 +4,29 @@
     <div class="container">
         <div class="table-container">
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <h3>Liste des tables de {{$restaurant->nom_resto}} à <small>{{$pointdevente->adresse}}</small>  </h3>
-                @if (session('success'))
-                    <div class="alert alert-success">
-                        {{ session('success') }}
-                    </div>
-                @endif
-                @if (session('delete'))
-                    <div class="alert alert-danger">
-                        {{ session('delete') }}
-                    </div>
-                @endif
+                <h3>Listes tables de {{$restaurant->nom_resto}} <br> <small> à {{$pointdevente->adresse}}</small>  </h3>
+                
                 <a href="{{route('table.create')}}">
                     <button class="au-btn au-btn-icon au-btn--green au-btn--small">
                         <i class="fas fa-sign-in-alt"></i>Nouveau Table
                     </button>
                 </a>
+                <a href="{{route('table.print')}}">
+                    <button class="au-btn au-btn-icon btn-primary au-btn--small">
+                        <i class="fas fa-download"></i>Imprimer
+                    </button>
+                </a>
             </div>
+            @if (session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
+            @if (session('delete'))
+                <div class="alert alert-danger">
+                    {{ session('delete') }}
+                </div>
+            @endif
             <div class="table-responsive">
                 <table class="table table-borderless">
                     <thead>
@@ -44,9 +50,6 @@
                                     @endif
                                 </td>
                                 <td class="actions d-flex justify-content-end">
-                                    <a href="{{route('table.show',$table->id)}}" data-toggle="tooltip" data-placement="top" title="Modifier">
-                                        <i class="fas fa-pencil-alt"></i>
-                                    </a>
                                     <form action="{{route('table.delete',$table->id)}}" method="POST">
                                         @csrf
                                         @method('DELETE')

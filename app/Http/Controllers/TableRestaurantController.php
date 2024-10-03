@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\Restaurant;
 use App\Models\PointdeVente;
 use Illuminate\Http\Request;
@@ -47,32 +48,23 @@ class TableRestaurantController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(TableRestaurant $id)
     {
-        //
+        $id->delete();
+        return redirect()->route('table.index')->with('success','Table supprimé avec succès');
+    }
+
+    public function printQrCodes()
+    {
+        $pointdevente = auth()->user()->pointdevente_id;
+        $tables = TableRestaurant::where('pointdevente_id',$pointdevente)->get();
+        $pointdevente = PointdeVente::findOrFail($pointdevente);
+        $restaurant_id = $pointdevente->restaurant_id;
+        $restaurant = Restaurant::findOrFail($restaurant_id);
+        $pdf = Pdf::loadView('table_restaurant.print_pdf', compact('tables', 'pointdevente','restaurant'));
+        return $pdf->download('qr_codes_tables.pdf');
     }
 }
