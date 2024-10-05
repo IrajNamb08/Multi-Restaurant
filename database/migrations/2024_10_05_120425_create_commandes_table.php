@@ -16,6 +16,8 @@ return new class extends Migration
             $table->unsignedBigInteger('table_restaurant_id');
             $table->string('numeroCommande');
             $table->boolean('emplacement')->default(0);// 0 : sur place 1: à emporter
+            $table->enum('etat', ['recu', 'en_preparation', 'pret_a_livrer', 'annule'])->default('recu');
+            $table->text('note')->nullable();
             $table->foreign('table_restaurant_id')->references('id')->on('table_restaurants');
             $table->timestamps();
         });

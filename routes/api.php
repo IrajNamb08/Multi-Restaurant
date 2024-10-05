@@ -23,3 +23,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::get('/restaurants/{restaurant}/pointsdevente/{pointdevente}', [RestaurantAPIController::class, 'show']);
 Route::post('/commandes', [CommandeAPIController::class, 'store']);
 Route::get('/commandes/{id}', [CommandeAPIController::class, 'show']);
+Route::put('/commandes/{id}', [CommandeAPIController::class, 'update']);

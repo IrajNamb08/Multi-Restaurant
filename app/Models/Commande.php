@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Commande extends Model
 {
     use HasFactory;
-    protected $fillable = ['table_restaurant_id','numeroCommande','emplacement'];
+    protected $fillable = ['table_restaurant_id','numeroCommande','emplacement','etat','note'];
 
     public function tableRestaurant()
     {

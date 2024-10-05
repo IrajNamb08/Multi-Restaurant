@@ -15,6 +15,8 @@ class CommandeAPIController extends Controller
         $request->validate([
             'table_restaurant_id' => 'required|exists:table_restaurants,id',
             'emplacement' => 'required|boolean',
+            'etat' => 'sometimes|in:reçu,en_preparation,pret,annule',
+            'note' => 'sometimes|nullable|string',
         ]);
 
         $table = TableRestaurant::findOrFail($request->table_restaurant_id);
@@ -27,12 +29,35 @@ class CommandeAPIController extends Controller
             'table_restaurant_id' => $request->table_restaurant_id,
             'numeroCommande' => $numeroCommande,
             'emplacement' => $request->emplacement,
+            'etat' => $request->etat ?? 'reçu',
+            'note' => $request->note,
         ]);
 
         return response()->json([
             'message' => 'Commande créée avec succès',
             'commande' => $commande
         ], 201);
+    }
+
+    public function show(Commande $id)
+    {
+        return response()->json($commande);
+    }
+
+    public function update(Request $request, Commande $id)
+    {
+        $request->validate([
+            'emplacement' => 'sometimes|boolean',
+            'etat' => 'sometimes|in:reçu,en_preparation,pret,annule',
+            'note' => 'sometimes|nullable|string',
+        ]);
+
+        $commande->update($request->only(['emplacement', 'etat', 'note']));
+
+        return response()->json([
+            'message' => 'Commande mise à jour avec succès',
+            'commande' => $commande
+        ]);
     }
     
     private function generateNumeroCommande($restaurant, $pointDeVente, $table)
@@ -47,9 +72,5 @@ class CommandeAPIController extends Controller
         $sequence = str_pad($count + 1, 3, '0', STR_PAD_LEFT);
 
         return $baseNumero . $sequence;
-    }
-    public function show(Commande $id)
-    {
-        return response()->json($id);
     }
 }
