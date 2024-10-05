@@ -2,6 +2,7 @@
 
   
 namespace App\Http\Controllers\Auth;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
@@ -20,7 +21,10 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
     }
-
+    public static function countUsers()
+    {
+        return User::count();
+    }
     public function login(Request $request): RedirectResponse
     {   
         $input = $request->all();

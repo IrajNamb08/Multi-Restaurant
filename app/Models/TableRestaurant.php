@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Commande;
 use App\Models\PointdeVente;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
@@ -35,5 +36,8 @@ class TableRestaurant extends Model
 
         $this->update(['qr_code' => $qrCodePath]);
     }
-
+    public function commandes()
+    {
+        return $this->hasMany(Commande::class);
+    }
 }

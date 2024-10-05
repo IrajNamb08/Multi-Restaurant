@@ -80,6 +80,9 @@
                     </tbody>
                 </table>
             </div>
+            <div class="d-flex py-3 justify-content-center">
+                {{ $sousMenus->links() }}
+            </div>
         </div>
     </div>
 @endsection
