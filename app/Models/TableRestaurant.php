@@ -26,7 +26,7 @@ class TableRestaurant extends Model
         $table = TableRestaurant::find($table_id);
         $table = $table->numero_table;
         // Générer une URL simple que l'application mobile pourra interpréter
-        $url = "myapp://scan/{$restaurant_id}/{$pointdevente_id}/{$table_id}/{$table}";
+        $url = "'restaurant_id':'{$restaurant_id}','pointdevente_id':'{$pointdevente_id}','table_id':'{$table_id}'";
 
         $qrCode = QrCode::size(300)->generate($url);
         $qrCodePath = 'qrcodes/table_' . $this->id . '.svg';
@@ -35,4 +35,5 @@ class TableRestaurant extends Model
 
         $this->update(['qr_code' => $qrCodePath]);
     }
+
 }

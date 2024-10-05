@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\Restaurant;
 use App\Models\PointdeVente;
 use Illuminate\Http\Request;
 use App\Models\TableRestaurant;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\TableRestaurantRequest;
 
 class TableRestaurantController extends Controller
@@ -53,6 +54,12 @@ class TableRestaurantController extends Controller
      */
     public function destroy(TableRestaurant $id)
     {
+        if ($id->qr_code) {
+            $qrCodePath = str_replace('storage/qrcodes', '', $id->qr_code);
+            if (Storage::disk('public')->exists($qrCodePath)) {
+                Storage::disk('public')->delete($qrCodePath);
+            }
+        }
         $id->delete();
         return redirect()->route('table.index')->with('success','Table supprimé avec succès');
     }
