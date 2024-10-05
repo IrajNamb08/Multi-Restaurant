@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\SousMenuController;
 use App\Http\Controllers\RestaurantController;
 use App\Http\Controllers\PointdeVenteController;
 use App\Http\Controllers\TableRestaurantController;
@@ -53,6 +54,14 @@ Route::middleware(['auth', 'user-access:restoAdmin'])->group(function (){
         Route::get('/show/{id}','show')->name('menu.show');
         Route::put('/update/{id}','update')->name('menu.update');
         Route::delete('/delete/{id}','destroy')->name('menu.delete');
+    });
+    Route::prefix('sousmenu')->controller(SousMenuController::class)->group(function(){
+        Route::get('/index','index')->name('sousmenu.index');
+        Route::get('/create','create')->name('sousmenu.create');
+        Route::post('/create','store')->name('sousmenu.store');
+        Route::get('/show/{id}','show')->name('sousmenu.show');
+        Route::put('/update/{id}','update')->name('sousmenu.update');
+        Route::delete('/delete/{id}','destroy')->name('sousmenu.delete');
     });
 });
 Route::middleware(['auth', 'user-access:manager'])->group(function (){

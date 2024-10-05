@@ -32,8 +32,8 @@
                                 <i class="fas fa-book"></i> Menus
                             </a>
                         </li>
-                        <li class="">
-                            <a href="">
+                        <li class="{{request()->routeIs('sousmenu.index') || request()->routeIs('sousmenu.create') || request()->routeIs('sousmenu.show') ? 'active' : ''}}">
+                            <a href="{{route('sousmenu.index')}}">
                                 <i class="fas fa-utensils"></i> Sous-menus
                             </a>
                         </li>

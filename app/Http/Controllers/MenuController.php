@@ -68,7 +68,7 @@ class MenuController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
+    public function update(MenuRequest $request, $id)
     {
         $menu = Menu::findOrFail($id);
         $menu->menu =  $request->menu ?? $menu->menu;
