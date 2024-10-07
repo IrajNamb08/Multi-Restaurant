@@ -269,7 +269,6 @@
         </div>
 
     </div>
-    
     <!-- Jquery JS-->
     <script src="{{asset('vendor/jquery-3.2.1.min.js')}}"></script>
     
@@ -294,7 +293,61 @@
     </script>
     <script src="{{asset('js/main.js')}}"></script>
 
-    <!-- Main JS-->
+    <script>
+        $(document).ready(function() {
+            console.log('Document ready');  // Vérification que le script s'exécute
+        
+            $('.etat-commande').change(function() {
+                console.log('Select changed');  // Vérification que l'événement est déclenché
+                var commandeId = $(this).data('commande-id');
+                var nouvelEtat = $(this).val();
+                var badge = $(this).siblings('.etat-badge');
+                var select = $(this);
+        
+                console.log('Commande ID:', commandeId);  // Log de l'ID de la commande
+                console.log('Nouvel état:', nouvelEtat);  // Log du nouvel état
+        
+                $.ajax({
+                    url: 'commande/update-etat-commande/' + commandeId,
+                    method: 'POST',
+                    data: {
+                        _token: '{{ csrf_token() }}',  // Notez le underscore ici
+                        etat: nouvelEtat
+                    },
+                    success: function(response) {
+                        console.log('Réponse reçue:', response);  // Log de la réponse
+                        badge.text(nouvelEtat);
+                        updateBadgeClass(badge, nouvelEtat);
+                        select.val(nouvelEtat);  // Met à jour la valeur du select
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Erreur AJAX:', status, error);  // Log détaillé de l'erreur
+                        alert('Une erreur est survenue. Veuillez réessayer. Détails : ' + error);
+                    }
+                });
+            });
+        
+            function updateBadgeClass(badge, etat) {
+                badge.removeClass('badge-warning badge-info badge-success badge-danger badge-secondary');
+                switch(etat) {
+                    case 'reçu':
+                        badge.addClass('badge-warning');
+                        break;
+                    case 'en_preparation':
+                        badge.addClass('badge-info');
+                        break;
+                    case 'pret_a_livrer':
+                        badge.addClass('badge-success');
+                        break;
+                    case 'annule':
+                        badge.addClass('badge-danger');
+                        break;
+                    default:
+                        badge.addClass('badge-secondary');
+                }
+            }
+        });
+    </script>
 </body>
 
 </html>

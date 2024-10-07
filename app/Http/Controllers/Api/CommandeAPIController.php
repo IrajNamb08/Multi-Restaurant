@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Commande;
+use App\Models\SousMenu;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\TableRestaurant;
+use App\Models\SousmenuCommande;
 use App\Http\Controllers\Controller;
 
 class CommandeAPIController extends Controller
@@ -17,6 +19,9 @@ class CommandeAPIController extends Controller
             'emplacement' => 'required|boolean',
             'etat' => 'sometimes|in:reçu,en_preparation,pret,annule',
             'note' => 'sometimes|nullable|string',
+            'items' => 'required|array',
+            'items.*.id' => 'required|exists:sous_menus,id',
+            'items.*.quantite' => 'required|integer|min:1',
         ]);
 
         $table = TableRestaurant::findOrFail($request->table_restaurant_id);
@@ -32,10 +37,25 @@ class CommandeAPIController extends Controller
             'etat' => $request->etat ?? 'reçu',
             'note' => $request->note,
         ]);
+        $totalCommande = 0;
 
+        foreach ($request->items as $item) {
+            $sousMenu = SousMenu::findOrFail($item['id']);
+            $prixTotal = $sousMenu->prix * $item['quantite'];
+            $totalCommande += $prixTotal;
+
+            SousmenuCommande::create([
+                'commande_id' => $commande->id,
+                'sousmenu_id' => $item['id'],
+                'quantite' => $item['quantite'],
+                'prix_total' => $prixTotal,
+            ]);
+        }
+        $commande->update(['total' => $totalCommande]);
+        $commande->load('sousmenuCommandes.sousMenu');
         return response()->json([
             'message' => 'Commande créée avec succès',
-            'commande' => $commande
+            'commande' => $commande,
         ], 201);
     }
 

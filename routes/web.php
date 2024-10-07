@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\CommandeController;
 use App\Http\Controllers\SousMenuController;
 use App\Http\Controllers\RestaurantController;
 use App\Http\Controllers\PointdeVenteController;
@@ -76,6 +77,9 @@ Route::middleware(['auth', 'user-access:manager'])->group(function (){
 });
 Route::middleware(['auth', 'user-access:cuisinier'])->group(function (){
     Route::get('/cuisinier', [HomeController::class, 'cuisinier'])->name('cuisinier');
+    Route::prefix('commande')->controller(CommandeController::class)->group(function(){
+        Route::post('/update-etat-commande/{id}','updateEtat')->name('commande.update-etat');;
+    });
 });
 
 Route::middleware(['auth'])->group(function () {
