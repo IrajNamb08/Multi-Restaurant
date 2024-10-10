@@ -18,6 +18,7 @@
                   <th>Prix Total</th>
                   <th>Note</th>
                   <th>État</th>
+                  <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -32,8 +33,8 @@
                         @endforeach
                       </ul>
                     </td>
-                    <td>{{$commande->note}}</td>
                     <td>{{$commande->total}} Ar</td>
+                    <td>{{$commande->note}}</td>
                     <td>
                       <select class="form-control etat-commande" data-commande-id="{{ $commande->id }}">
                         <option value="reçu" {{ $commande->etat == 'reçu' ? 'selected' : '' }}>Reçu</option>
@@ -42,6 +43,9 @@
                         <option value="annule" {{ $commande->etat == 'annule' ? 'selected' : '' }}>Annulé</option>
                       </select>
                       <span class="badge badge-{{ getBadgeClass($commande->etat) }} etat-badge text-uppercase" style="width: 150px;height:20px">{{ ucfirst($commande->etat) }}</span>
+                    </td>
+                    <td>
+                      <button class="btn btn-primary btn-sm voir-commande" data-commande-id="{{ $commande->id }}">Voir</button>
                     </td>
                   </tr>
                 @endforeach
@@ -53,4 +57,7 @@
     </div>
   </div>
 </div>
+
+<!-- Modal -->
+
 @endsection

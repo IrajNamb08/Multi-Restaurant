@@ -348,6 +348,41 @@
             }
         });
     </script>
+    <script>
+        $(document).ready(function() {
+            $('.voir-commande').click(function() {
+                var commandeId = $(this).data('commande-id');
+                $.ajax({
+                    url: 'commande/commande-details/' + commandeId,
+                    method: 'GET',
+                    success: function(response) {
+                        $('#commandeModalBody').html(response);
+                        $('#commandeModal').modal('show');
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Erreur lors du chargement des détails de la commande:', error);
+                    }
+                });
+            });
+        
+            // Le reste de votre code JavaScript existant...
+        });
+    </script>
+    <div class="modal fade" id="commandeModal" tabindex="-1" role="dialog" aria-labelledby="commandeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="commandeModalLabel">Détails de la commande</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body" id="commandeModalBody">
+              <!-- Le contenu sera chargé dynamiquement ici -->
+            </div>
+          </div>
+        </div>
+      </div>
 </body>
 
 </html>

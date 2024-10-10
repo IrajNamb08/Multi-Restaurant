@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Models\TableRestaurant;
 use App\Models\SousmenuCommande;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Validator;
 
 class CommandeAPIController extends Controller
 {
@@ -58,12 +59,30 @@ class CommandeAPIController extends Controller
             'commande' => $commande,
         ], 201);
     }
-
-    public function show(Commande $id)
+    public function showMultipleStates(Request $request)
     {
-        return response()->json($commande);
-    }
+        $validator = Validator::make($request->all(), [
+            'ids' => 'required|array',
+            'ids.*' => 'integer|exists:commandes,id'
+        ]);
 
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 400);
+        }
+
+        $commandes = Commande::whereIn('id', $request->ids)
+                             ->select('id', 'etat')
+                             ->get();
+
+        $result = $commandes->map(function ($commande) {
+            return [
+                'id' => $commande->id,
+                'etat' => $commande->etat
+            ];
+        });
+
+        return response()->json($result);
+    }
     public function update(Request $request, Commande $id)
     {
         $request->validate([

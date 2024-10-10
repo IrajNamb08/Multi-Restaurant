@@ -25,6 +25,6 @@ class SousMenu extends Model
     }
     public function sousmenuCommandes()
     {
-        return $this->hasMany(SousmenuCommande::class);
+        return $this->hasMany(SousmenuCommande::class, 'sousmenu_id');
     }
 }

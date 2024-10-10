@@ -2,8 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Commande;
+use App\Models\SousMenu;
+use App\Models\Restaurant;
+use App\Models\PointdeVente;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
@@ -20,7 +26,9 @@ class HomeController extends Controller
 
     public function admin()
     {
-        return view('admin');
+        $restaurant = Restaurant::count();
+        $revenueMensuel = $restaurant *100000;
+        return view('admin',compact('restaurant','revenueMensuel'));
     }
     public function restoAdmin()
     {

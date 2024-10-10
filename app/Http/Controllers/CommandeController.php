@@ -14,4 +14,10 @@ class CommandeController extends Controller
         $commande->save();
         return response()->json(['success' => true]);
     }
+
+    public function getDetails($id)
+    {
+        $commande = Commande::with(['sousmenuCommandes.sousMenu', 'tableRestaurant'])->findOrFail($id);
+        return view('commande.detail', compact('commande'));
+    }
 }

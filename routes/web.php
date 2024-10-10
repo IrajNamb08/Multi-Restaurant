@@ -79,6 +79,7 @@ Route::middleware(['auth', 'user-access:cuisinier'])->group(function (){
     Route::get('/cuisinier', [HomeController::class, 'cuisinier'])->name('cuisinier');
     Route::prefix('commande')->controller(CommandeController::class)->group(function(){
         Route::post('/update-etat-commande/{id}','updateEtat')->name('commande.update-etat');;
+        Route::get('/commande-details/{id}','getDetails')->name('commande.details');
     });
 });
 

@@ -22,5 +22,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::get('/{restaurant}/{pointdevente}', [RestaurantAPIController::class, 'show']);
 Route::post('/commandes', [CommandeAPIController::class, 'store']);
-Route::get('/commandes/{id}', [CommandeAPIController::class, 'show']);
+Route::post('/commandes/etats', [CommandeAPIController::class, 'showMultipleStates']);
 // Route::put('/commandes/{id}', [CommandeAPIController::class, 'update']); badge-info, badge-warning, badge-success

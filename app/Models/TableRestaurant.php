@@ -16,7 +16,7 @@ class TableRestaurant extends Model
 
     public function pointdevente()
     {
-        return $this->belongsTo(PointdeVente::class);
+        return $this->belongsTo(PointdeVente::class,'pointdevente_id');
     }
 
     public function generateQrCode()

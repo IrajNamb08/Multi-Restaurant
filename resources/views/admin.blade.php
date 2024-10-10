@@ -7,41 +7,11 @@
             <div class="overview__inner">
                 <div class="overview-box clearfix">
                     <div class="icon">
-                        <i class="zmdi zmdi-account-o"></i>
+                        <i class="fas fa-utensils"></i>
                     </div>
-                    <div class="text">
-                        <h2>2</h2>
-                        <span>Employers</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-sm-6 col-lg-3">
-        <div class="overview-item ">
-            <div class="overview__inner">
-                <div class="overview-box clearfix">
-                    <div class="icon">
-                        <i class="far fa-building"></i>
-                    </div>
-                    <div class="text">
-                        <h2>2</h2>
-                        <span>Départements</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-sm-6 col-lg-3">
-        <div class="overview-item ">
-            <div class="overview__inner">
-                <div class="overview-box clearfix">
-                    <div class="icon">
-                        <i class="fas fa-briefcase"></i>
-                    </div>
-                    <div class="text">
-                        <h2>3</h2>
-                        <span>Fonctions</span>
+                    <div class="text text-uppercase">
+                        <h2>{{$restaurant}}</h2>
+                        <span>Restaurants membres</span>
                     </div>
                 </div>
             </div>
@@ -54,9 +24,9 @@
                     <div class="icon">
                         <i class="zmdi zmdi-money"></i>
                     </div>
-                    <div class="text">
-                        <h2>2</h2>
-                        <span>Total salaires</span>
+                    <div class="text text-uppercase">
+                        <h2>{{number_format($revenueMensuel,2)}} Ar</h2>
+                        <span>Revenue mensuel</span>
                     </div>
                 </div>
             </div>
