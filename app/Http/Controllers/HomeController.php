@@ -9,6 +9,7 @@ use App\Models\Restaurant;
 use App\Models\PointdeVente;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use App\Models\TableRestaurant;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
@@ -32,11 +33,66 @@ class HomeController extends Controller
     }
     public function restoAdmin()
     {
-        return view('restoAdmin');
+        $currentUser = auth()->user();
+        $pointdeventes = PointdeVente::where('restaurant_id', $currentUser->restaurant_id)->get();
+        $managerCount = User::where('restaurant_id', $currentUser->restaurant_id)
+                        ->where(function($query) {
+                            $query->where('type', 'manager')->orWhere('type', 2);
+                        })
+                        ->count();
+
+        $cuisinierCount = User::where('restaurant_id', $currentUser->restaurant_id)
+                         ->where(function($query) {
+                             $query->where('type', 'cuisinier')->orWhere('type', 3);
+                         })
+                         ->count();
+        // Comptage des commandes d'aujourd'hui
+        $todayOrdersCount = Commande::whereHas('tableRestaurant.pointdevente', function($query) use ($currentUser) {
+            $query->where('restaurant_id', $currentUser->restaurant_id);
+        })
+        ->whereDate('created_at', Carbon::today())
+        ->count();
+        $pointdeventes = PointdeVente::where('restaurant_id', $currentUser->restaurant_id)
+        ->withSum('commandes as chiffre_affaires_total', 'total')
+        ->withSum(['commandes as chiffre_affaires_aujourd_hui' => function($query) {
+            $query->whereDate('commandes.created_at', now()->toDateString());
+        }], 'total')
+        ->get();
+        return view('restoAdmin',compact('managerCount','cuisinierCount','pointdeventes','todayOrdersCount'));
     }
     public function manager()
     {
-        return view('manager');
+        $currentUser = auth()->user();
+        $pointDeVenteId = $currentUser->pointdevente_id;
+
+        $tables = TableRestaurant::where('pointdevente_id', $pointDeVenteId)
+            ->withCount([
+                'commandes as commandes_en_cours_count' => function ($query) {
+                    $query->where('etat', 'reçu');
+                },
+                'commandes as commandes_en_preparation_count' => function ($query) {
+                    $query->where('etat', 'en_preparation');
+                },
+                'commandes as commandes_pret_a_livrer_count' => function ($query) {
+                    $query->where('etat', 'pret_a_livrer');
+                }
+            ])
+            ->get();
+    
+        // Calculer les totaux pour toutes les tables
+        $totalEnCours = $tables->sum('commandes_en_cours_count');
+        $totalEnPreparation = $tables->sum('commandes_en_preparation_count');
+        $totalPretALivrer = $tables->sum('commandes_pret_a_livrer_count');
+
+        // Récupérer les 5 dernières commandes prêtes à livrer
+        $dernieresCommandesPretALivrer = Commande::where('etat', 'pret_a_livrer')
+        ->whereIn('table_restaurant_id', $tables->pluck('id'))
+        ->with('tableRestaurant')
+        ->orderBy('updated_at', 'desc')
+        ->take(5)
+        ->get(['id', 'numeroCommande', 'table_restaurant_id', 'updated_at']);
+    
+        return view('manager', compact('tables', 'totalEnCours', 'totalEnPreparation', 'totalPretALivrer','dernieresCommandesPretALivrer'));
     }
     public function cuisinier()
     {

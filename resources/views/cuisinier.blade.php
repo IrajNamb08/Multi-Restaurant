@@ -12,9 +12,10 @@
             <table class="table table-hover">
               <thead>
                 <tr>
-                  <th>Numéro de Commande</th>
-                  <th>Numéro de Table</th>
+                  <th>N°Commande</th>
+                  <th>N°Table</th>
                   <th>Plats</th>
+                  <th>Emplacement</th>
                   <th>Prix Total</th>
                   <th>Note</th>
                   <th>État</th>
@@ -33,6 +34,13 @@
                         @endforeach
                       </ul>
                     </td>
+                    <td>
+                      @if($commande->emplacement == 0)
+                        <span class="badge badge-success">Sur place</span>
+                      @else
+                        <span class="badge badge-info">À emporter</span>
+                      @endif
+                    </td>
                     <td>{{$commande->total}} Ar</td>
                     <td>{{$commande->note}}</td>
                     <td>
@@ -45,7 +53,7 @@
                       <span class="badge badge-{{ getBadgeClass($commande->etat) }} etat-badge text-uppercase" style="width: 150px;height:20px">{{ ucfirst($commande->etat) }}</span>
                     </td>
                     <td>
-                      <button class="btn btn-primary btn-sm voir-commande" data-commande-id="{{ $commande->id }}">Voir</button>
+                      <button class="btn btn-warning btn-sm voir-commande" data-commande-id="{{ $commande->id }}"><i class="fas fa-eye"></i></button>
                     </td>
                   </tr>
                 @endforeach

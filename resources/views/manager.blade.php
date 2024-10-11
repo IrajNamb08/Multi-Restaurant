@@ -7,11 +7,11 @@
             <div class="overview__inner">
                 <div class="overview-box clearfix">
                     <div class="icon">
-                        <i class="zmdi zmdi-account-o"></i>
+                        <i class="fas fa-table"></i>
                     </div>
                     <div class="text">
-                        <h2>2</h2>
-                        <span>Employers</span>
+                        <h2>{{$tables->count()}}</h2>
+                        <span>Tables</span>
                     </div>
                 </div>
             </div>
@@ -25,8 +25,8 @@
                         <i class="far fa-building"></i>
                     </div>
                     <div class="text">
-                        <h2>2</h2>
-                        <span>Départements</span>
+                        <h2>{{$totalEnCours}}</h2>
+                        <span>Commande en cours</span>
                     </div>
                 </div>
             </div>
@@ -40,8 +40,8 @@
                         <i class="fas fa-briefcase"></i>
                     </div>
                     <div class="text">
-                        <h2>3</h2>
-                        <span>Fonctions</span>
+                        <h2>{{$totalEnPreparation}}</h2>
+                        <span>Commande en préparation</span>
                     </div>
                 </div>
             </div>
@@ -52,15 +52,37 @@
             <div class="overview__inner">
                 <div class="overview-box clearfix">
                     <div class="icon">
-                        <i class="zmdi zmdi-money"></i>
+                        <i class="fas fa-bell"></i>
                     </div>
                     <div class="text">
-                        <h2>2</h2>
-                        <span>Total salaires</span>
+                        <h2>{{$totalPretALivrer}}</h2>
+                        <span>Commande prêt à livrer</span>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
+</div><br>
+<div class="row">
+    <div class="col-md-6">
+        <!-- TOP CAMPAIGN-->
+        <div class="top-campaign">
+            <h3 class="title-3 m-b-30">5 dernières commandes prêtes à livre</h3>
+            <div class="table-responsive">
+                <table class="table table-top-campaign">
+                    <tbody>
+                        @foreach($dernieresCommandesPretALivrer as $commande)
+                            <tr>
+                                <td>{{ $commande->numeroCommande }}</td>
+                                <td>{{ $commande->tableRestaurant->numero_table }}</td>
+                                <td>{{ $commande->updated_at->format('d/m/Y H:i') }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!--  END TOP CAMPAIGN-->
     </div>
 </div>
 @endsection
