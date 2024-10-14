@@ -1,7 +1,7 @@
 <aside class="menu-sidebar d-none d-lg-block">
     <div class="logo" style="width: 300px;overflow: hidden;">
         <a href="#">
-            <img src="{{asset('vendor/logo.PNG')}}" style="width: 118px;height: 75px;object-fit: cover;"  alt="Multi-restaurant" />
+            <img src="{{asset('vendor/multiresto.PNG')}}" style="width: 118px;height: 75px;object-fit: cover;"  alt="Multi-restaurant" />
         </a>
     </div>
     <div class="menu-sidebar__content js-scrollbar1">
